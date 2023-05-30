@@ -23,26 +23,12 @@ const userSchema = new mongoose.Schema({
     minLength: 6,
     maxLength: 1024,
   },
-  // role: {
-  //   type: String,
-  //   enum: ["user", "admin"],
-  //   required: true,
-  // },
+
   date: {
     type: String,
     default: Date.now(),
   },
 });
-
-// userSchema.methods.isUser = function () {
-//   return this.role == "user";
-//   //   return booleen
-// };
-
-// userSchema.methods.isAdmin = function () {
-//   return this.role == "admin";
-//   //   return booleen
-// };
 
 // mongoose schema middleware:userSchema 儲存資料前先把密碼hash
 userSchema.pre("save", async function (next) {

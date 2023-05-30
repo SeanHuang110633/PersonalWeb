@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const authRoute = require("./routes").auth;
 dotenv.config();
 
 // connect to DB
@@ -21,7 +22,8 @@ mongoose
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // app.use(cors());
-// app.use("/api/user", authRoute);
+app.use("/api/user", authRoute);
+
 // app.use(
 //   "/api/journal",
 //   passport.authenticate("jwt", { session: false }),

@@ -24,16 +24,15 @@ router.post("/register", async (req, res) => {
   if (error) return res.status(400).send(error.details[0].message);
 
   // check if the user exists
-  const emailExist = await User.findOne({ email: req.body.email });
-  if (emailExist)
-    return res.status(400).send("Email has already been registered.");
+  const userExist = await User.findOne({ username: req.body.username });
+  if (userExist)
+    return res.status(400).send("User has already been registered.");
 
   // register the user
   const newUser = new User({
-    email: req.body.email,
     username: req.body.username,
+    email: req.body.email,
     password: req.body.password,
-    role: req.body.role,
   });
   try {
     const savedUser = await newUser.save();
@@ -51,7 +50,7 @@ router.post("/login", (req, res) => {
   const { error } = loginValidation(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
-  User.findOne({ email: req.body.email })
+  User.findOne({ username: req.body.username })
     .then((user) => {
       if (!user) {
         res.status(401).send("User not found.");
@@ -59,7 +58,8 @@ router.post("/login", (req, res) => {
         user.comparePassword(req.body.password, function (err, isMatch) {
           if (err) return res.status(400).send(err);
           if (isMatch) {
-            const tokenObject = { _id: user._id, email: user.email };
+            const tokenObject = { _id: user._id };
+            // const tokenObject = { _id: user._id, email: user.email };
             const token = jwt.sign(tokenObject, process.env.PASSPORT_SECRET);
             res.send({ success: true, token: "JWT " + token, user });
           } else {
